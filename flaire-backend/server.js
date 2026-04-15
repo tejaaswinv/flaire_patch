@@ -12,7 +12,10 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: [
+      "http://localhost:5173",
+      "https://flaire-patch.vercel.app",
+    ],
     credentials: true,
   })
 );
@@ -73,9 +76,10 @@ app.post("/auth/signup", (req, res) => {
   writeUsers(users);
 
   res.cookie("userEmail", user.email, {
-    httpOnly: false,
-    sameSite: "lax",
-  });
+  httpOnly: false,
+  sameSite: "none",
+  secure: true,
+});
 
   return res.json({
     user: {
@@ -361,6 +365,8 @@ app.patch("/medications/:id/taken", (req, res) => {
   return res.json(medication);
 });
 
+const PORT = process.env.PORT || 8000;
+
 app.listen(PORT, () => {
-  console.log(`Backend running on http://localhost:${PORT}`);
+  console.log(`Server running on port ${PORT}`);
 });
